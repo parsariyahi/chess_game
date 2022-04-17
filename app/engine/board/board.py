@@ -1,24 +1,81 @@
 from squares.square import Square
-from pieces.piece import Piece, EACH_PIECE
+from pieces.piece import (
+        Piece, 
+        Pawn,
+        Bishop,
+        Knight,
+        Rook,
+        Queen,
+        King,
+    )
+
+
+def test() :
+    pass
+#test()
+
+"""
+Accessing each piece is :
+
+    board[rank_index][file_index].piece.movement
+                               (Square).(Piece)
+
+"""
+
 
 class Board:
-    board = [
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-    ]
 
     def __init__(self):
+        """
+        Define a complete fresh board
+        """
+        self.__set_board()
         self.__set_pawns()
         self.__set_knights()
         self.__set_rooks()
+        self.__set_bishops()
         self.__set_queen()
         self.__set_king()
+
+    def __set_board(self) -> None:
+        """
+        Setting the Board
+
+        the structure is :
+        [rank_index][file_index] : Square
+
+        :param None
+        :return None
+        """
+        board = []
+
+        for rank_index in range(8):
+            files = [] 
+
+            if rank_index % 2 == 0 : #if the index is even the first square of the file is blask
+                for file_index in range(8):
+                    if file_index % 2 == 0 :
+                        files.append(
+                                Square(rank_index, file_index, 'black')
+                        )
+                    else :
+                        files.append(
+                                Square(rank_index, file_index, 'white')
+                        )
+            else : #if the index is odd the first square of the file is white
+                for file_index in range(8):
+                    if file_index % 2 == 0 :
+                        files.append(
+                                Square(rank_index, file_index, 'white')
+                        )
+                    else :
+                        files.append(
+                                Square(rank_index, file_index, 'black')
+                        )
+
+            board.append(files)
+
+        self.board = board
 
     def __set_pawns(self) -> None:
         """
@@ -27,46 +84,18 @@ class Board:
         :param None
         :return None
         """
-        pawn = Piece()
 
-        """
-        white pawns
-        """
+        """ white pawns """
+        white_pawn = Pawn('pawn', 'white')
         rank_index = 1
-        for file_index in range(7):
-            self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', pawn)
+        for file_index in range(8):
+            self.board[rank_index][file_index].piece = white_pawn
 
-        """
-        black pawns
-        """
+        """ black pawns """
+        black_pawn = Pawn('pawn', 'black')
         rank_index = 6
-        for file_index in range(7):
-            self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', pawn)
-
-
-    def __set_rooks(self) -> None:
-        """
-        Setting the rooks on the board
-
-        :param None
-        :return None
-        """
-        rook = Piece()
-
-        """
-        white rooks
-        """
-        rank_index = 0
-        for file_index in [0, 7]:
-            self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', rook)
-
-        """
-        black rooks
-        """
-        rank_index = 7
-        for file_index in [0, 7]:
-            self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', rook)
-
+        for file_index in range(8):
+            self.board[rank_index][file_index].piece = black_pawn
 
     def __set_knights(self) -> None:
         """
@@ -75,22 +104,38 @@ class Board:
         :param None
         :return None
         """
-        knight = Piece()
 
-        """
-        white knights
-        """
+        """ white knights """
+        white_knight = Knight('knight', 'white')
         rank_index = 0
         for file_index in [1, 6]:
-            self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', knight)
+            self.board[rank_index][file_index].piece = white_knight
 
-        """
-        black knights
-        """
+        """ black knights """
+        black_knight = Knight('knight', 'black')
         rank_index = 7
         for file_index in [1, 6]:
-            self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', knight)
+            self.board[rank_index][file_index].piece = black_knight
 
+    def __set_rooks(self) -> None:
+        """
+        Setting the rooks on the board
+
+        :param None
+        :return None
+        """
+
+        """ white rooks """
+        white_rook = Rook('rook', 'white')
+        rank_index = 0
+        for file_index in [0, 7]:
+            self.board[rank_index][file_index].piece = white_rook
+
+        """ black rooks """
+        black_rook = Rook('rook', 'black')
+        rank_index = 7
+        for file_index in [0, 7]:
+            self.board[rank_index][file_index].piece = black_rook
 
     def __set_bishops(self) -> None:
         """
@@ -99,21 +144,18 @@ class Board:
         :param None
         :return None
         """
-        bishop = Piece()
 
-        """
-        white bishops
-        """
+        """ white bishops """
+        white_bishop = Bishop('bishop', 'white')
         rank_index = 0
         for file_index in [2, 5]:
-            self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', bishop)
+            self.board[rank_index][file_index].piece = white_bishop
 
-        """
-        black bishops
-        """
+        """ black bishops """
+        black_bishop = Bishop('bishop', 'bishop')
         rank_index = 7
         for file_index in [2, 5]:
-            self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', bishop)
+            self.board[rank_index][file_index].piece = black_bishop
 
     def __set_queen(self) -> None:
         """
@@ -122,21 +164,18 @@ class Board:
         :param None
         :return None
         """
-        queen = Piece()
 
-        """
-        white queen
-        """
+        """ white queen """
+        white_queen = Queen('queen', 'white')
         rank_index = 0
         file_index = 3
-        self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', queen)
+        self.board[rank_index][file_index].piece = white_queen
 
-        """
-        black queen
-        """
+        """ black queen """
+        black_queen = Queen('queen', 'black')
         rank_index = 7
         file_index = 3
-        self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', queen)
+        self.board[rank_index][file_index].piece = black_queen
 
     def __set_king(self) -> None:
         """
@@ -145,29 +184,30 @@ class Board:
         :param None
         :return None
         """
-        king = Piece()
 
-        """
-        white king
-        """
+        """ white king """
+        white_king = King('king', 'white')
         rank_index = 0
         file_index = 4
-        self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', king)
+        self.board[rank_index][file_index].piece = white_king
 
-        """
-        black king
-        """
+        """ black king """
+        black_king = King('king', 'black')
         rank_index = 7
         file_index = 4
-        self.board[rank_index][file_index] = Square(rank_index, file_index, 'white', king)
+        self.board[rank_index][file_index].piece = black_king
 
     def get(self) -> list :
         """
+        Returns the board
         
         :return board Type[list]
         """
         return self.board
 
-# b = Board().get()
+b = Board().get()
 
-# print(b[0][0])
+for rank in b :
+    print(rank, '\n \n')
+
+print(b[0][2].color)
