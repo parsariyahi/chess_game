@@ -10,9 +10,6 @@ from pieces.piece import (
     )
 
 
-def test() :
-    pass
-#test()
 
 """
 Accessing each piece is :
@@ -207,7 +204,26 @@ class Board:
 
 b = Board().get()
 
+#for rank in b :
+    #print(rank, '\n \n')
+
+#print(b[0][2].color)
+
+def test(board, piece, current, next) :
+    rank_index, file_index = current[0], current[1]
+    next_rank, next_file = next[0], next[1]
+    piece = board[rank_index][file_index].piece
+    board[rank_index][file_index].piece = None
+    board[next_rank][next_file].piece = piece
+
+    return board
+
+move = {
+        'piece': 'pawn',
+        'current': [1, 0],
+        'next': [3, 0],
+    }
+
+b = test(b, **move)
 for rank in b :
     print(rank, '\n \n')
-
-print(b[0][2].color)
