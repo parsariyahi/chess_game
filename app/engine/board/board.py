@@ -21,22 +21,53 @@ Accessing each piece is :
 
 
 class Board:
+    __shared_instance = None
+    board = []
+
+    @staticmethod
+    def get_instance() :
+        """ Singleton pattern,
+
+        Returns an instance of the board
+
+        :return board Type[Board]
+        """
+        if Board.__shared_instance is None :
+            Board()
+
+        return Board.__shared_instance
 
     def __init__(self):
         """
-        Define a complete fresh board
+        Define a complete fresh board from scratch
         """
-        self.__set_board()
-        self.__set_pawns()
-        self.__set_knights()
-        self.__set_rooks()
-        self.__set_bishops()
-        self.__set_queen()
-        self.__set_king()
+        if Board.__shared_instance is not None :
+            """If initiate the board twice, 
+            
+            like:
+                first_instance = Board()
+                secend_instance = Board()
 
-    def __set_board(self) -> None:
+            you should do it like:
+                first_instance = Board()
+
+                secend_instance = first_instance.get_instance()
+                OR
+                secend_instance = Board.get_instance()
+
+            BEST PRACTICE:
+                every time use get_instance() method becuase it runs the __init__ anyway
+                first_instance = Board.get_instance()
+                secend_instance = Board.get_instance()
+            """
+            raise Exception('Get an instance of this by CLASSNAME.get_instance()')
+        else :
+            Board.__create_board(self) # create the board from scratch, passing self
+            Board.__shared_instance = self # an instance of the board itself for Singleton pattern
+
+    def __create_board(self) -> None:
         """
-        Setting the Board
+        Creating the board
 
         the structure is :
         [rank_index][file_index] : Square
@@ -44,7 +75,6 @@ class Board:
         :param None
         :return None
         """
-        board = []
 
         for rank_index in range(8):
             files = [] 
@@ -70,9 +100,17 @@ class Board:
                                 Square(rank_index, file_index, 'black')
                         )
 
-            board.append(files)
+            self.board.append(files)
 
-        self.board = board
+        """
+        Set up the pieces on their first square
+        """
+        self.__set_pawns()
+        self.__set_knights()
+        self.__set_rooks()
+        self.__set_bishops()
+        self.__set_queen()
+        self.__set_king()
 
     def __set_pawns(self) -> None:
         """
@@ -202,28 +240,37 @@ class Board:
         """
         return self.board
 
-b = Board().get()
+# b = Board.get_instance()
 
-#for rank in b :
-    #print(rank, '\n \n')
+# for rank in b.board :
+#     print(rank, '\n \n')
 
-#print(b[0][2].color)
+# print('-' * 100)
 
-def test(board, piece, current, next) :
-    rank_index, file_index = current[0], current[1]
-    next_rank, next_file = next[0], next[1]
-    piece = board[rank_index][file_index].piece
-    board[rank_index][file_index].piece = None
-    board[next_rank][next_file].piece = piece
+# def test(board, piece, current, next) :
+#     rank_index, file_index = current[0], current[1]
+#     next_rank, next_file = next[0], next[1]
+#     piece = board[rank_index][file_index].piece
+#     board[rank_index][file_index].piece = None
+#     board[next_rank][next_file].piece = piece
 
-    return board
+# move = {
+#         'piece': 'pawn',
+#         'current': [1, 0],
+#         'next': [3, 0],
+#     }
 
-move = {
-        'piece': 'pawn',
-        'current': [1, 0],
-        'next': [3, 0],
-    }
+# test(b.board, **move)
+# for rank in b.board :
+#     print(rank, '\n \n')
 
-b = test(b, **move)
-for rank in b :
-    print(rank, '\n \n')
+# print('-' * 100)
+
+# c = Board.get_instance()
+
+# for rank in c.board :
+#     print(rank, '\n \n')
+
+# print('-' * 100)
+# a = Board()
+# b = Board()

@@ -1,9 +1,11 @@
+from .. import Board
+
 class Movement:
 
     def __init__(self) :
         pass
 
-    def move(self, board, piece, current_location: list, next_location: list) :
+    def move(self, board: list, piece: str, current_location: list, next_location: list) -> list :
         """
         The main function  of each move
 
